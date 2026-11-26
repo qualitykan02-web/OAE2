@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard ตัวชี้วัด สสจ.กาญจนบุรี</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b2a4a;--teal:#0891b2;--sky:#38bdf8;--ok:#10b981;--warn:#f59e0b;--bad:#ff6b57;--bg:#eaf7fb;--card:#fff;--ink:#17324d;--mut:#5f7a92;--line:#d6e8f0}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Sarabun','Noto Sans Thai',Tahoma,sans-serif;color:var(--ink);background:linear-gradient(180deg,#d9f1f8 0,var(--bg) 380px,#f6fbfd 100%);font-size:16px}
+h1,h2,h3,.num{font-family:'Prompt','Sarabun',sans-serif;margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px 40px}
+.hero{background:linear-gradient(120deg,#0b2a4a 0,#0b6e99 55%,#19b5c9 100%);color:#fff;border-radius:0 0 28px 28px;padding:26px 0 0;position:relative;overflow:hidden}
+.hero .in{display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.hero h1{font-size:clamp(22px,3.2vw,34px);line-height:1.3}
+.hero p{margin:6px 0 0;opacity:.9}
+.hero svg.art{width:230px;height:190px;flex:none}
+.bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:14px;padding:10px 16px;margin:18px 0 22px;backdrop-filter:blur(4px)}
+.dot{width:11px;height:11px;border-radius:50%;background:#9aa;flex:none}
+.dot.live{background:#4ade80;box-shadow:0 0 0 0 #4ade80;animation:p 2s infinite}
+.dot.off{background:#fbbf24}.dot.err{background:#ff6b57}
+@keyframes p{70%{box-shadow:0 0 0 9px transparent}}
+.bar b{font-weight:700}.bar .sp{flex:1}
+button,select{font:inherit;color:inherit}
+.btn{border:0;background:#fff;color:var(--navy);padding:7px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+.btn:focus-visible,select:focus-visible,.tab:focus-visible,.hrow:focus-visible{outline:3px solid #fbbf24;outline-offset:2px}
+.ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:20px 0 6px}
+.ctl label{font-weight:600;color:var(--navy)}
+select{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;max-width:100%;min-width:200px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tab{border:1px solid var(--line);background:#fff;padding:10px 20px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--mut)}
+.tab[aria-selected=true]{background:linear-gradient(120deg,var(--teal),var(--sky));color:#fff;border-color:transparent}
+.grid{display:grid;gap:16px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.two{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:0 6px 18px rgba(8,100,140,.07)}
+.card h3{font-size:17px;margin-bottom:12px;color:var(--navy)}
+.k{display:flex;gap:14px;align-items:center}
+.k .ic{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;flex:none}
+.k small{color:var(--mut);display:block}.k .num{font-size:28px;font-weight:700;line-height:1.1}
+.ring{--p:0;--c:var(--ok);width:150px;height:150px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),#e3eef4 0);display:grid;place-items:center;margin:auto}
+.ring div{width:114px;height:114px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center}
+.ring .num{font-size:28px;font-weight:700}
+.badge{display:inline-block;padding:3px 12px;border-radius:999px;font-weight:700;font-size:14px;color:#fff}
+.pass{background:var(--ok)}.fail{background:var(--bad)}
+.vbars{display:flex;gap:18px;align-items:flex-end;height:230px;border-bottom:2px solid var(--line);position:relative;padding:0 8px;margin-top:10px}
+.vb{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;position:relative;z-index:1}
+.vb i{display:block;width:70%;max-width:84px;border-radius:10px 10px 0 0;background:linear-gradient(180deg,var(--sky),var(--teal));transition:height .6s}
+.vb i.cur{background:linear-gradient(180deg,#34d399,#059669)}
+.vb span{font-weight:700;font-family:Prompt;font-size:15px;margin-bottom:4px}
+.vl{display:flex;gap:18px;padding:6px 8px;color:var(--mut)}.vl div{flex:1;text-align:center}
+.tl{position:absolute;left:0;right:0;border-top:2px dashed var(--bad);z-index:0}
+.tl em{position:absolute;right:0;top:-24px;font-style:normal;font-size:13px;color:var(--bad);font-weight:700;background:#fff;padding:0 4px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.hlist{max-height:620px;overflow:auto;padding-right:4px}
+.hrow{display:grid;grid-template-columns:minmax(120px,230px) 1fr 74px;gap:10px;align-items:center;padding:7px 8px;border-radius:10px;cursor:pointer}
+.hrow:hover,.hrow.sel{background:#e8f6fb}
+.hrow .nm{font-size:14.5px;line-height:1.25}
+.trk{height:20px;background:#eaf2f6;border-radius:8px;position:relative}
+.trk i{display:block;height:100%;border-radius:8px;transition:width .6s}
+.trk u{position:absolute;top:-4px;bottom:-4px;border-left:2px dashed var(--navy);opacity:.6}
+.hrow b{text-align:right;font-family:Prompt;font-size:14.5px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--mut);font-size:14px;margin-bottom:8px}
+.legend s{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:5px;text-decoration:none;vertical-align:-1px}
+.tw{overflow:auto;border:1px solid var(--line);border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th{background:var(--navy);color:#fff;text-align:left;padding:11px 12px;font-weight:600;position:sticky;top:0}
+td{padding:10px 12px;border-top:1px solid var(--line)}
+td.r,th.r{text-align:right}
+tr.sel td{background:#fff6d6}tr.tot td{background:#e8f6fb;font-weight:700}
+.empty{padding:30px;text-align:center;color:var(--mut)}
+.src{color:var(--mut);font-size:13px;text-align:center;margin-top:26px}
+@media(max-width:600px){.hero svg.art{display:none}.hrow{grid-template-columns:1fr 64px}.hrow .trk{grid-column:1/3;order:3}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap" style="padding-bottom:0">
+ <div class="in">
+  <div>
+   <h1>Dashboard ตัวชี้วัดงานสาธารณสุข จังหวัดกาญจนบุรี</h1>
+   <p id="sub">สำนักงานสาธารณสุขจังหวัดกาญจนบุรี</p>
+  </div>
+  <!-- ภาพประกอบ: ทารกสวมที่ครอบหู คลื่นเสียง และโรงพยาบาล (SVG) — เปลี่ยนเป็นรูปถ่ายจริงได้โดยแทนที่ด้วย <img src="..."> -->
+  <svg class="art" viewBox="0 0 230 190" role="img" aria-label="ภาพประกอบทารกกับการตรวจการได้ยิน">
+   <defs><radialGradient id="sk" cx=".4" cy=".35"><stop offset="0" stop-color="#ffe3c9"/><stop offset="1" stop-color="#f6bd96"/></radialGradient></defs>
+   <circle cx="105" cy="100" r="82" fill="#ffffff" opacity=".12"/>
+   <path d="M30 150h60v-38l-30-20-30 20z" fill="#fff" opacity=".92"/><rect x="54" y="118" width="12" height="32" fill="#0891b2"/><path d="M54 104h12M60 98v12" stroke="#ff6b57" stroke-width="4"/>
+   <circle cx="125" cy="104" r="50" fill="url(#sk)"/>
+   <path d="M118 56c6-9 22-9 26 0" stroke="#c98a5e" stroke-width="4" fill="none" stroke-linecap="round"/>
+   <path d="M92 94a36 36 0 0 1 66 0" stroke="#0b2a4a" stroke-width="7" fill="none" stroke-linecap="round"/>
+   <rect x="81" y="90" width="16" height="30" rx="8" fill="#19b5c9"/><rect x="153" y="90" width="16" height="30" rx="8" fill="#19b5c9"/>
+   <path d="M108 108q6 6 12 0M132 108q6 6 12 0" stroke="#7a4a2b" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+   <circle cx="104" cy="122" r="6" fill="#ff9d86" opacity=".6"/><circle cx="148" cy="122" r="6" fill="#ff9d86" opacity=".6"/>
+   <path d="M118 127q8 8 16 0" stroke="#c0503a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+   <path d="M182 82q10 12 0 24M194 72q16 22 0 44M206 62q22 32 0 64" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".85"/>
+  </svg>
+ </div>
+ <div class="bar" role="status">
+  <span class="dot" id="dot"></span>
+  <span>อัพเดทข้อมูล ณ วันที่ <b id="upd">—</b></span><span id="sd" style="opacity:.85;font-size:14px"></span>
+  <span class="sp"></span>
+  <span id="conn" style="opacity:.9"></span>
+  <button class="btn" id="rf" type="button">รีเฟรชข้อมูล</button>
+ </div>
+</div></header>
+
+<main class="wrap">
+ <div class="ctl"><label for="selI">ตัวชี้วัด</label><select id="selI"></select></div>
+ <div class="tabs" role="tablist">
+  <button class="tab" role="tab" data-v="prov">1. ภาพรวมระดับจังหวัด</button>
+  <button class="tab" role="tab" data-v="hosp">2. รายโรงพยาบาล</button>
+  <button class="tab" role="tab" data-v="tbl">3. ตารางรายละเอียด</button>
+ </div>
+ <section id="view"></section>
+ <p class="src">เชื่อมต่อข้อมูลจาก Google Sheets · ตรวจการแก้ไขอัตโนมัติทุก <span id="pms"></span> วินาที</p>
+</main>
+
+<script>
+/* ===== ตั้งค่า ===== */
+const CFG = {
+  SCRIPT_URL: '',      // วาง URL ของ Web App (Apps Script) ที่ลงท้ายด้วย /exec  — ว่าง = โหมดข้อมูลตัวอย่าง
+  POLL_MS: 5000        // ความถี่ตรวจว่ามีการแก้ไขชีตหรือไม่ (มิลลิวินาที)
+};
+/* ข้อมูลตัวอย่าง (สำเนาจากชีตเมื่อสร้าง Dashboard) ใช้แสดงผลเมื่อยังไม่ได้เชื่อมต่อ */
+const DEMO = {updated:null,ind:[{name:'ร้อยละความครอบคลุมการคัดกรองได้ยินของทารกแรกเกิด',sheet:'ชีต1',fy:'ปีงบประมาณ 2569',target:95,
+ years:[{y:'พ.ศ.2566',v:51.80},{y:'พ.ศ.2567',v:60.42},{y:'พ.ศ.2568',v:67.48},{y:'พ.ศ.2569',v:85.91}],
+ colA:'จำนวนทารกที่ได้รับการตรวจการได้ยินภายใน 30 วัน',colB:'จำนวนทารกแรกเกิดมีชีพทั้งหมด',
+ rows:[['รพ.พหลพลพยุหเสนา',1805,1793,100.67],['รพ.มะการักษ์',507,531,95.48],['รพ.ทองผาภูมิ',150,271,55.35],['รพ.สมเด็จพระสังฆราชองค์ที่ 19',457,462,98.92],['รพ.บ่อพลอย',56,111,50.45],['รพ.สังขละบุรี',7,82,8.54],['รพ.เจ้าคุณไพบูลย์พนมทวน',48,67,71.64],['รพ.ด่านมะขามเตี้ย',22,49,44.90],['รพ.ท่ากระดาน',10,19,52.63],['รพ.ไทรโยค',17,46,36.96],['รพ.เลาขวัญ',45,109,41.28],['รพ.พยาบาลสถานพระบารมี',10,46,21.74],['รพ.สมเด็จพระปิยมหาราชรมณียเขต',7,23,30.43],['รพ.ห้วยกระเจาเฉลิมพระเกียรติ 80 พรรษา',8,18,44.44],['รพ.ศุกร์ศิริศรีสวัสดิ์',0,14,0],['รพ.หนองปรือ',33,63,52.38]].map((r,i)=>({no:i+1,name:r[0],a:r[1],b:r[2],pct:r[3]})),
+ total:{a:3182,b:3704,pct:85.91}}]};
+
+/* ===== เครื่องมือ ===== */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num=x=>{const n=parseFloat(String(x==null?'':x).replace(/,/g,''));return isNaN(n)?null:n};
+const f2=n=>n==null?'-':n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const f0=n=>n==null?'-':n.toLocaleString('en-US');
+const colr=(p,t)=>p>=t?'var(--ok)':p>=50?'var(--warn)':'var(--bad)';
+const S={fetched:null,ind:[],cur:0,hos:-1,view:'prov',metric:'pct',ver:null,updated:null};
+
+/* ===== แปลงข้อมูลดิบจากชีต -> ตัวชี้วัด (1 ชีต = 1 ตัวชี้วัด) ===== */
+function parseSheet(sh){
+  const v=sh.values, T=r=>r.join(' ');
+  const ir=v.findIndex(r=>/ตัวชี้วัด/.test(T(r)));
+  const hr=v.findIndex(r=>/หน่วยบริการ/.test(T(r)));
+  if(ir<0||hr<0) return null;
+  const yrRow=v.find(r=>/พ\.ศ\./.test(T(r)));
+  const years=yrRow?(T(yrRow).match(/พ\.ศ\.\s*\d{4}/g)||[]).map(s=>s.replace(/\s/g,'')):[];
+  const cells=v[ir].filter(c=>String(c).trim()!=='');
+  const first=String(cells[0]);
+  let target=null,m=first.match(/[>≥]\s*(?:ร้อยละ)?\s*([\d.]+)/); if(m) target=num(m[1]);
+  const nums=cells.slice(1).map(num).filter(n=>n!=null);
+  if(target==null&&nums.length>years.length) target=nums.shift();
+  const vals=nums.slice(-years.length||undefined);
+  const name=first.replace(/^\s*ตัวชี้วัด\s*[:：]?\s*/,'').replace(/\s*[>≥].*$/,'').trim();
+  const fy=(v.find(r=>/ปีงบประมาณ/.test(T(r)))||[]).join(' ').trim();
+  const hdr=v[hr].filter(c=>String(c).trim()!=='').map(s=>String(s).replace(/\s+/g,' '));
+  const rows=[];let total=null;
+  for(let i=hr+1;i<v.length;i++){
+    const c=v[i].filter(x=>String(x).trim()!=='');
+    if(!c.length) continue;
+    if(/รวมทั้งสิ้น/.test(c[0])){const n=c.slice(1).map(num).filter(x=>x!=null);total={a:n[0],b:n[1],pct:n[2]};break}
+    if(c.length>=5&&num(c[0])!=null) rows.push({no:num(c[0]),name:String(c[1]).trim(),a:num(c[2]),b:num(c[3]),pct:num(c[4])});
+  }
+  return {name,sheet:sh.name,fy,target:target==null?95:target,years:years.map((y,i)=>({y,v:vals[i]})),
+    colA:hdr[2]||'ผลงาน (A)',colB:hdr[3]||'เป้าหมาย/ทั้งหมด (B)',rows,total};
+}
+function thaiDT(d){return d?d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'})+' เวลา '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' น.':'—'}
+function thaiDate(s){
+  if(!s) return '—';
+  const d=new Date(s);
+  if(isNaN(d)||!/\d{4}-\d{2}-\d{2}T/.test(s)) return esc(s);
+  return d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'})+' เวลา '+d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})+' น.';
+}
+
+/* ===== ดึงข้อมูล ===== */
+async function load(){
+  if(!CFG.SCRIPT_URL){S.ind=DEMO.ind;S.updated=DEMO.updated;S.fetched=new Date();status('off','โหมดข้อมูลตัวอย่าง (ยังไม่ได้เชื่อมต่อ Sheet)');return draw()}
+  try{
+    const r=await fetch(CFG.SCRIPT_URL+'?t='+Date.now(),{cache:'no-store'});
+    const j=await r.json();
+    const ind=(j.sheets||[]).map(parseSheet).filter(Boolean);
+    if(!ind.length) throw new Error('ไม่พบตารางตัวชี้วัดในชีต');
+    S.ind=ind;S.ver=j.version;S.updated=j.updated;S.fetched=new Date();
+    if(S.cur>=ind.length)S.cur=0;
+    status('live','เชื่อมต่อแล้ว · ข้อมูลเป็นปัจจุบัน');draw();
+  }catch(e){status('err','เชื่อมต่อไม่สำเร็จ: '+e.message);if(!S.ind.length){S.ind=DEMO.ind;draw()}}
+}
+async function poll(){
+  if(!CFG.SCRIPT_URL||document.hidden) return;
+  try{const j=await (await fetch(CFG.SCRIPT_URL+'?action=version&t='+Date.now(),{cache:'no-store'})).json();
+    if(S.ver!==null&&j.version!==S.ver) load(); else if(S.ver===null) load();}
+  catch(e){status('err','ขาดการเชื่อมต่อ กำลังลองใหม่…')}
+}
+function status(k,t){$('#dot').className='dot '+k;$('#conn').textContent=t}
+
+/* ===== แสดงผล ===== */
+function draw(){
+  const sel=$('#selI');
+  sel.innerHTML=S.ind.map((x,i)=>`<option value="${i}">${esc(x.name)}</option>`).join('');
+  sel.value=S.cur;
+  $('#upd').textContent=thaiDT(S.fetched);$('#sd').textContent=S.updated?'(เวลาแก้ไขชีตล่าสุด '+thaiDate(S.updated).replace(/<[^>]*>/g,'')+')':'';
+  $('#sub').textContent='สำนักงานสาธารณสุขจังหวัดกาญจนบุรี · '+(S.ind[S.cur].fy||'');
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.v===S.view));
+  const I=S.ind[S.cur];
+  $('#view').innerHTML=S.view==='prov'?vProv(I):S.view==='hosp'?vHosp(I):vTbl(I);
+}
+const ico=(c,p)=>`<span class="ic" style="background:${c}1f"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${p}</svg></span>`;
+function vProv(I){
+  const t=I.total||{a:0,b:0,pct:0}, ok=I.rows.filter(r=>r.pct>=I.target).length, n=I.rows.length, gap=t.pct-I.target, pass=t.pct>=I.target;
+  const prev=I.years.length>1?I.years[I.years.length-2].v:null;
+  const mx=100, th=I.target/mx*100;
+  return `<div class="grid kpis">
+   <div class="card"><div class="k">${ico('#0891b2','<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>')}<div><small>หน่วยบริการที่ผ่านเกณฑ์</small><span class="num">${ok}/${n}</span></div></div></div>
+   <div class="card"><div class="k">${ico('#10b981','<path d="M8 12l3 3 5-6"/><circle cx="12" cy="12" r="9"/>')}<div><small>${esc(I.colA)}</small><span class="num">${f0(t.a)}</span></div></div></div>
+   <div class="card"><div class="k">${ico('#f59e0b','<circle cx="9" cy="8" r="3"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M17 11a3 3 0 100-6M21 20c0-3-1.5-4.5-4-5"/>')}<div><small>${esc(I.colB)}</small><span class="num">${f0(t.b)}</span></div></div></div>
+   <div class="card"><div class="k">${ico(gap>=0?'#10b981':'#ff6b57','<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>')}<div><small>ส่วนต่างจากเป้าหมาย</small><span class="num" style="color:${gap>=0?'var(--ok)':'var(--bad)'}">${gap>=0?'+':''}${f2(gap)}</span></div></div></div>
+  </div>
+  <div class="grid two" style="margin-top:16px">
+   <div class="card"><h3>ผลการดำเนินงานระดับจังหวัด</h3>
+    <div class="ring" style="--p:${Math.min(t.pct,100)};--c:${colr(t.pct,I.target)}"><div><div><span class="num">${f2(t.pct)}%</span><br><span class="badge ${pass?'pass':'fail'}">${pass?'ผ่านเกณฑ์':'ไม่ผ่านเกณฑ์'}</span></div></div></div>
+    <p style="text-align:center;color:var(--mut);margin:12px 0 0">เป้าหมาย ≥ ร้อยละ ${f2(I.target)}${prev!=null?` · เพิ่มขึ้น ${f2(t.pct-prev)} จุด จากปีก่อนหน้า`:''}</p></div>
+   <div class="card"><h3>แนวโน้มรายปี (ร้อยละ)</h3>
+    <div class="vbars"><div class="tl" style="bottom:${th}%"><em>เป้า ${f2(I.target)}</em></div>
+     ${I.years.map((y,i)=>`<div class="vb"><span>${f2(y.v)}</span><i class="${i===I.years.length-1?'cur':''}" style="height:${Math.min(y.v||0,100)*0.82}%"></i></div>`).join('')}</div>
+    <div class="vl">${I.years.map(y=>`<div>${esc(y.y)}</div>`).join('')}</div></div>
+  </div>`;
+}
+function vHosp(I){
+  const M={pct:['ร้อยละ',r=>r.pct],a:['ผลงาน (จำนวน)',r=>r.a],b:['จำนวนทั้งหมด',r=>r.b]};
+  const g=M[S.metric][1], rows=I.rows.map((r,i)=>({...r,i})).sort((x,y)=>(g(y)||0)-(g(x)||0));
+  const mx=S.metric==='pct'?100:Math.max(1,...I.rows.map(r=>g(r)||0));
+  const list=rows.map(r=>{const v=g(r)||0,w=Math.min(v/mx*100,100);
+    const c=S.metric==='pct'?colr(v,I.target):'linear-gradient(90deg,#38bdf8,#0891b2)';
+    return `<div class="hrow ${r.i===S.hos?'sel':''}" tabindex="0" role="button" data-h="${r.i}"><span class="nm">${esc(r.name)}</span>
+     <span class="trk"><i style="width:${w}%;background:${c}"></i>${S.metric==='pct'?`<u style="left:${I.target}%"></u>`:''}</span><b>${S.metric==='pct'?f2(v):f0(v)}</b></div>`}).join('');
+  const H=S.hos>=0?I.rows[S.hos]:null;
+  const det=H?`<div class="card" style="margin-top:16px;border-left:6px solid ${colr(H.pct,I.target)}"><h3>${esc(H.name)}</h3>
+    <div class="grid kpis"><div><small>${esc(I.colA)}</small><div class="num" style="font-size:24px">${f0(H.a)}</div></div>
+    <div><small>${esc(I.colB)}</small><div class="num" style="font-size:24px">${f0(H.b)}</div></div>
+    <div><small>ร้อยละ</small><div class="num" style="font-size:24px;color:${colr(H.pct,I.target)}">${f2(H.pct)}</div></div>
+    <div><small>ส่วนต่างจากเป้าหมาย</small><div class="num" style="font-size:24px">${H.pct-I.target>=0?'+':''}${f2(H.pct-I.target)}</div></div></div>
+    <p style="margin:12px 0 0"><span class="badge ${H.pct>=I.target?'pass':'fail'}">${H.pct>=I.target?'ผ่าน':'ไม่ผ่าน'}</span> <button class="btn" style="background:var(--navy);color:#fff;margin-left:8px" data-go="tbl">ดูรายละเอียดในตาราง</button></p></div>`:'';
+  return `<div class="card"><div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin-bottom:8px"><h3 style="margin:0">เปรียบเทียบรายหน่วยบริการ</h3>
+   <div class="seg">${Object.keys(M).map(k=>`<button type="button" data-m="${k}" aria-pressed="${S.metric===k}">${M[k][0]}</button>`).join('')}</div></div>
+   ${S.metric==='pct'?`<div class="legend"><span><s style="background:var(--ok)"></s>ผ่านเกณฑ์ (≥ ${f2(I.target)})</span><span><s style="background:var(--warn)"></s>50 – ต่ำกว่าเกณฑ์</span><span><s style="background:var(--bad)"></s>ต่ำกว่า 50</span><span>เส้นประ = เป้าหมาย</span></div>`:''}
+   <div class="hlist">${list}</div></div>${det}`;
+}
+function vTbl(I){
+  const rows=I.rows.filter((r,i)=>S.hos<0||i===S.hos);
+  return `<div class="card"><div class="ctl" style="margin-top:0"><label for="selH">หน่วยบริการ</label>
+   <select id="selH"><option value="-1">ทุกหน่วยบริการ</option>${I.rows.map((r,i)=>`<option value="${i}" ${i===S.hos?'selected':''}>${esc(r.name)}</option>`).join('')}</select></div>
+   <div class="tw"><table><thead><tr><th>ลำดับ</th><th>หน่วยบริการ</th><th class="r">${esc(I.colA)}</th><th class="r">${esc(I.colB)}</th><th class="r">ร้อยละ</th><th>ผล</th></tr></thead><tbody>
+   ${rows.map(r=>{const p=r.pct>=I.target;return `<tr class="${r.no-1===S.hos?'sel':''}"><td>${r.no}</td><td>${esc(r.name)}</td><td class="r">${f0(r.a)}</td><td class="r">${f0(r.b)}</td><td class="r"><b style="color:${colr(r.pct,I.target)}">${f2(r.pct)}</b></td><td><span class="badge ${p?'pass':'fail'}">${p?'ผ่าน':'ไม่ผ่าน'}</span></td></tr>`}).join('')||'<tr><td colspan="6" class="empty">ไม่พบข้อมูล</td></tr>'}
+   ${S.hos<0&&I.total?`<tr class="tot"><td></td><td>รวมทั้งสิ้น (ระดับจังหวัด)</td><td class="r">${f0(I.total.a)}</td><td class="r">${f0(I.total.b)}</td><td class="r">${f2(I.total.pct)}</td><td><span class="badge ${I.total.pct>=I.target?'pass':'fail'}">${I.total.pct>=I.target?'ผ่าน':'ไม่ผ่าน'}</span></td></tr>`:''}
+   </tbody></table></div></div>`;
+}
+
+/* ===== เหตุการณ์ ===== */
+$('#selI').onchange=e=>{S.cur=+e.target.value;S.hos=-1;draw()};
+$('#rf').onclick=load;
+document.querySelector('.tabs').onclick=e=>{const t=e.target.closest('.tab');if(t){S.view=t.dataset.v;draw()}};
+$('#view').addEventListener('click',e=>{
+  const h=e.target.closest('[data-h]');if(h){S.hos=+h.dataset.h===S.hos?-1:+h.dataset.h;draw();return}
+  const m=e.target.closest('[data-m]');if(m){S.metric=m.dataset.m;draw();return}
+  if(e.target.closest('[data-go]')){S.view='tbl';draw()}
+});
+$('#view').addEventListener('change',e=>{if(e.target.id==='selH'){S.hos=+e.target.value;draw()}});
+$('#view').addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset.h!=null){e.preventDefault();e.target.click()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
+
+$('#pms').textContent=CFG.POLL_MS/1000;
+load();
+setInterval(poll,CFG.POLL_MS);
+</script>
+</body>
+</html>
